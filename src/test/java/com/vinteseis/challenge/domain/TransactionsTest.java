@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 public class TransactionsTest {
 
-    Transactions transactions = new Transactions();
+    private Transactions transactions = new Transactions();
 
     @Test
     public void shouldAddTransactionsAndReturnItsNumberOfOccurrencesBasedInItsTimestamps() throws Exception {
