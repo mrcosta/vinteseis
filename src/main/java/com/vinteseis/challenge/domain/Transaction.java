@@ -25,9 +25,4 @@ public class Transaction {
     public double addAmount(double amountToAdd) {
         return amount += amountToAdd;
     }
-
-    @Override
-    public String toString() {
-        return "Transaction {amount: " + amount + ", timestamp: " + timestamp + "}";
-    }
 }

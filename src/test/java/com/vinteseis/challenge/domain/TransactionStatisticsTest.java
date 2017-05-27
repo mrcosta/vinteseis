@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 
 public class TransactionStatisticsTest {
 
-    public static final int ONE_SECOND = 1000;
+    public static final int TWO_SECONDS = 2000;
     public static final int TEN_SECONDS = 10000;
     public static final int THIRTY_SECONDS = 30000;
 
@@ -32,7 +32,7 @@ public class TransactionStatisticsTest {
     @Test
     public void shouldUpdateStatisticsInformationCorrectly() {
         Transaction olderTransaction = new Transaction(10.1, 1495889815650l, 1);
-        Transaction transaction = new Transaction(1.1, currentTimeMillis() - ONE_SECOND, 2);
+        Transaction transaction = new Transaction(1.1, currentTimeMillis() - TWO_SECONDS, 2);
         Transaction transaction2 = new Transaction(13.2, currentTimeMillis() - TEN_SECONDS, 2);
         Transaction transaction3 = new Transaction(13.1, currentTimeMillis() - THIRTY_SECONDS, 2);
 

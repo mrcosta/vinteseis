@@ -5,16 +5,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
-import static java.lang.Double.NEGATIVE_INFINITY;
-import static java.lang.Double.POSITIVE_INFINITY;
+import static java.lang.Double.*;
 import static java.lang.System.currentTimeMillis;
 
 @Getter
 @NoArgsConstructor
 public class TransactionStatistics {
 
-    public static final int MILLISECONDS_IN_A_MINUTE = 60000;
-    
+    public static final int A_MINUTE = 60000;
+
     private double sum;
     private double avg;
     private double max;
@@ -22,7 +21,7 @@ public class TransactionStatistics {
     private long count;
 
     public TransactionStatistics updateStatistics(Map<Long, Transaction> transactions) {
-        long oneMinuteBefore = currentTimeMillis() - MILLISECONDS_IN_A_MINUTE;
+        long oneMinuteBefore = currentTimeMillis() - A_MINUTE;
         restartValues();
 
         transactions.forEach( (timestamp, transaction) -> {
@@ -49,8 +48,8 @@ public class TransactionStatistics {
     private void restartValues() {
         sum = 0;
         avg = 0;
-        max = NEGATIVE_INFINITY;
-        min = POSITIVE_INFINITY;
+        max = MIN_VALUE;
+        min = MAX_VALUE;
         count = 0;
     }
 }
