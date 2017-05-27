@@ -11,6 +11,6 @@ public class StatisticsController {
     @RequestMapping("/statistics")
     @ResponseBody
     public TransactionStatistics getStatistics() {
-        return new TransactionStatistics(1);
+        return new TransactionStatistics();
     }
 }
