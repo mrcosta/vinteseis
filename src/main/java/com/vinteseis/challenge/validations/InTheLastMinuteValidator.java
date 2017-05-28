@@ -10,7 +10,9 @@ public class InTheLastMinuteValidator implements ConstraintValidator<InTheLastMi
     public static final int A_MINUTE = 60000;
 
     @Override
-    public void initialize(InTheLastMinute inTheLastMinute) {}
+    public void initialize(InTheLastMinute inTheLastMinute) {
+        // empty method following the contract
+    }
 
     @Override
     public boolean isValid(Long timestamp, ConstraintValidatorContext context) {

@@ -2,6 +2,7 @@ package com.vinteseis.challenge.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import static java.lang.System.currentTimeMillis;
 
 @Getter
 @NoArgsConstructor
+@Component
 public class TransactionStatistics {
 
     public static final int A_MINUTE = 60000;

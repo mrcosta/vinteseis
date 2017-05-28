@@ -1,7 +1,6 @@
 package com.vinteseis.challenge.validations;
 
 import com.vinteseis.challenge.domain.Transaction;
-import com.vinteseis.challenge.exceptions.InvalidTimestampException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -10,7 +9,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-
 import java.util.Set;
 
 import static java.lang.System.currentTimeMillis;
