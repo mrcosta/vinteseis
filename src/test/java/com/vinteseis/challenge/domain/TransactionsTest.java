@@ -38,28 +38,4 @@ public class TransactionsTest {
         assertThat(transactions.getTransactions().get(timestamp).getAmount(), is(32.3));
         assertThat(count, is(2l));
     }
-
-    @Test
-    public void shouldNotConsiderTimestampOlderThan60Seconds() throws Exception {
-        long timestamp = 1495889815650l;
-        Transaction oldTransaction = new Transaction(12.3, timestamp);
-        Transactions transactions = new Transactions();
-
-        long count = transactions.add(oldTransaction);
-
-        assertThat(transactions.getTransactions().size(), is(0));
-        assertThat(count, is(0l));
-    }
-
-    @Test
-    public void shouldNotConsiderTimestampsInTheFuture() throws Exception {
-        long timestamp = currentTimeMillis() + TEN_SECONDS;
-        Transaction oldTransaction = new Transaction(12.3, timestamp);
-        Transactions transactions = new Transactions();
-
-        long count = transactions.add(oldTransaction);
-
-        assertThat(transactions.getTransactions().size(), is(0));
-        assertThat(count, is(0l));
-    }
 }

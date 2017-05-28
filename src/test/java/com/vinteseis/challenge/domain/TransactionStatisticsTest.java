@@ -13,9 +13,9 @@ import static org.junit.Assert.assertThat;
 
 public class TransactionStatisticsTest {
 
-    public static final int TWO_SECONDS = 2000;
-    public static final int TEN_SECONDS = 10000;
-    public static final int THIRTY_SECONDS = 30000;
+    private static final int TWO_SECONDS = 2000;
+    private static final int TEN_SECONDS = 10000;
+    private static final int THIRTY_SECONDS = 30000;
 
     @Test
     public void shouldUpdateStatisticsExcludingTheOnesThatAreOlderThan60Seconds() {

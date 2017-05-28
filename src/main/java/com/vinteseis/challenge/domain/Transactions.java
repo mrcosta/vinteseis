@@ -6,9 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.vinteseis.challenge.domain.TransactionStatistics.A_MINUTE;
-import static java.lang.System.currentTimeMillis;
-
 @Component
 @Getter
 public class Transactions {
@@ -20,23 +17,15 @@ public class Transactions {
     }
 
     public long add(Transaction transaction) {
-        long count = 0l;
+        long count;
 
-        if (isInTheLastMinute(transaction.getTimestamp())) { // TODO: move to a validation of the input level
-            if (timestampAlreadyAdded(transaction.getTimestamp()) && isInTheLastMinute(transaction.getTimestamp())) {
-                count = mergeTransactions(transaction);
-            } else {
-                count = addTransaction(transaction);
-            }
+        if (timestampAlreadyAdded(transaction.getTimestamp())) {
+            count = mergeTransactions(transaction);
+        } else {
+            count = addTransaction(transaction);
         }
 
         return count;
-    }
-
-    private boolean isInTheLastMinute(long timestamp) {
-        long now = currentTimeMillis();
-        long oneMinuteBefore = now - A_MINUTE;
-        return timestamp >= oneMinuteBefore && timestamp <= now;
     }
 
     private boolean timestampAlreadyAdded(long timestamp) {
