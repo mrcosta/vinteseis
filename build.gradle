@@ -55,8 +55,10 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: ['**/Application**',
-                              '**/GlobalHandlerException**'
+                    exclude: ['**/Application.class**',
+                              '**/GlobalHandlerException.class**',
+                              '**/Transaction.class**',
+                              '**/TransactionStatisticsDto.class**'
                     ])
         })
     }

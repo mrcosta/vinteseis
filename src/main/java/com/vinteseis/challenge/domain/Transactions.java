@@ -1,8 +1,6 @@
 package com.vinteseis.challenge.domain;
 
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -13,8 +11,6 @@ import java.util.concurrent.ConcurrentMap;
 @Component
 @Getter
 public class Transactions {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static final int EACH_10_MILLISECONDS = 10;
 
