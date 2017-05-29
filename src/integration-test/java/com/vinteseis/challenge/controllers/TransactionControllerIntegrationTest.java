@@ -26,8 +26,7 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void shouldExcludeAdditionalInputsAndAddAValidTransaction() throws Exception {
-        long timestamp = currentTimeMillis();
-        String transaction = "{\"amount\": 50.7,\"timestamp\": " + timestamp + ",\"max\":0.0}";
+        String transaction = "{\"amount\": 50.7,\"timestamp\": " + currentTimeMillis() + ",\"max\":0.0}";
 
         mvc.perform(post("/transactions")
                 .content(transaction)
@@ -50,6 +49,17 @@ public class TransactionControllerIntegrationTest {
     @Test
     public void shouldNotAddTransactionWithWrongInputs() throws Exception {
         String transaction = "{\"amount\": a,\"timestamp\": b }";
+
+        mvc.perform(post("/transactions")
+                .content(transaction)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(isEmptyOrNullString()));
+    }
+
+    @Test
+    public void shouldNotAddTransactionWithEmptyBody() throws Exception {
+        String transaction = "";
 
         mvc.perform(post("/transactions")
                 .content(transaction)

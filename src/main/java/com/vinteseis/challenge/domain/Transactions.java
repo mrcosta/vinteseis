@@ -1,6 +1,10 @@
 package com.vinteseis.challenge.domain;
 
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -10,7 +14,14 @@ import java.util.Map;
 @Getter
 public class Transactions {
 
-    private Map<Long, Transaction> transactions;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public static final int EACH_100_MILLISECONDS = 100;
+
+    @Autowired
+    private TransactionStatistics transactionStatistics;
+
+    private Map<Long, TimestampTransactions> transactions;
 
     public Transactions() {
        transactions = new HashMap<>();
@@ -28,22 +39,35 @@ public class Transactions {
         return count;
     }
 
+    @Scheduled(fixedDelay = EACH_100_MILLISECONDS)
+    public void updateStatistics() {
+        transactionStatistics.update(transactions);
+    }
+
     private boolean timestampAlreadyAdded(long timestamp) {
         return transactions.containsKey(timestamp);
     }
 
     private long addTransaction(Transaction transaction) {
-        transactions.put(transaction.getTimestamp(), transaction);
-        transaction.incrementCounter();
+        TimestampTransactions timestampTransactions = new TimestampTransactions(transaction.getTimestamp(), transaction.getAmount());
 
-        return transaction.getCount();
+        transactions.put(transaction.getTimestamp(), timestampTransactions);
+        updateInformation(timestampTransactions, transaction.getAmount());
+
+        return timestampTransactions.getCount();
     }
 
     private long mergeTransactions(Transaction transaction) {
-        Transaction existingTransaction = transactions.get(transaction.getTimestamp());
-        existingTransaction.addAmount(transaction.getAmount());
-        existingTransaction.incrementCounter();
+        TimestampTransactions existingTimestampTransactions = transactions.get(transaction.getTimestamp());
+        existingTimestampTransactions.addAmount(transaction.getAmount());
+        updateInformation(existingTimestampTransactions, transaction.getAmount());
 
-        return existingTransaction.getCount();
+        return existingTimestampTransactions.getCount();
+    }
+
+    private void updateInformation(TimestampTransactions timestampTransactions, double amount) {
+        timestampTransactions.incrementCounter();
+        timestampTransactions.chooseCurrentMax(amount);
+        timestampTransactions.chooseCurrentMin(amount);
     }
 }

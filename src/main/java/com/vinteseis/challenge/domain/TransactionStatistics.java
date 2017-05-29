@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import static java.lang.Double.*;
@@ -18,32 +19,41 @@ public class TransactionStatistics {
 
     private double sum;
     private double avg;
-    private double max;
-    private double min;
+    private double max = MIN_VALUE;
+    private double min = MAX_VALUE;
     private long count;
 
-    public TransactionStatistics updateStatistics(Map<Long, Transaction> transactions) {
+    public void update(Map<Long, TimestampTransactions> transactions) {
         long oneMinuteBefore = currentTimeMillis() - A_MINUTE;
         restartValues();
 
-        transactions.forEach( (timestamp, transaction) -> {
-            if (transaction.getTimestamp() > oneMinuteBefore) {
-                updateValues(transaction);
+        transactions.forEach( (timestamp, timestampTransactions) -> {
+            if (timestamp > oneMinuteBefore) {
+                updateValues(timestampTransactions);
             }
         });
+    }
+
+    public TransactionStatistics formatted() {
+        max = max == MIN_VALUE ? 0 : max;
+        min = min == MAX_VALUE ? 0 : min;
 
         return this;
     }
 
-    private void updateValues(Transaction transaction) {
-        sum += transaction.getAmount();
-        count += transaction.getCount();
-        avg = sum / count;
+    private void updateValues(TimestampTransactions timestampTransactions) {
+        DecimalFormat doubleTwoDecimals = new DecimalFormat(".##");
 
-        if (transaction.getAmount() > max) {
-            max = transaction.getAmount();
-        } else if (transaction.getAmount() < min) {
-           min = transaction.getAmount();
+        sum = parseDouble(doubleTwoDecimals.format(timestampTransactions.getAmount() + sum));
+        count += timestampTransactions.getCount();
+        avg = parseDouble(doubleTwoDecimals.format(sum / count));
+
+        if (timestampTransactions.getMax() > max) {
+            max = timestampTransactions.getMax();
+        }
+
+        if (timestampTransactions.getMin() < min) {
+           min = timestampTransactions.getMin();
         }
     }
 

@@ -19,11 +19,11 @@ public class TransactionStatisticsTest {
 
     @Test
     public void shouldUpdateStatisticsExcludingTheOnesThatAreOlderThan60Seconds() {
-        Transaction olderTransaction = new Transaction(10.1, 1495889815650l, 1);
-        Transaction actualTransaction = new Transaction(13.1, currentTimeMillis(), 2);
+        TimestampTransactions olderTransaction = new TimestampTransactions(1495889815650l, 10.1, 1, 1, 1);
+        TimestampTransactions actualTransaction = new TimestampTransactions(currentTimeMillis(), 13.1, 1, 1, 2);
 
         TransactionStatistics transactionStatistics = new TransactionStatistics();
-        transactionStatistics.updateStatistics(createTransactions(asList(olderTransaction, actualTransaction)));
+        transactionStatistics.update(createTransactions(asList(olderTransaction, actualTransaction)));
 
         assertThat(transactionStatistics.getCount(), is(2l));
         assertThat(transactionStatistics.getSum(), is(13.1));
@@ -31,22 +31,32 @@ public class TransactionStatisticsTest {
 
     @Test
     public void shouldUpdateStatisticsInformationCorrectly() {
-        Transaction olderTransaction = new Transaction(10.1, 1495889815650l, 1);
-        Transaction transaction = new Transaction(1.1, currentTimeMillis() - TWO_SECONDS, 2);
-        Transaction transaction2 = new Transaction(13.2, currentTimeMillis() - TEN_SECONDS, 2);
-        Transaction transaction3 = new Transaction(13.1, currentTimeMillis() - THIRTY_SECONDS, 2);
+        TimestampTransactions olderTransaction = new TimestampTransactions(1495889815650l, 10.1,10.1, 10.1, 1);
+        TimestampTransactions transaction = new TimestampTransactions(currentTimeMillis() - TWO_SECONDS, 1.1, 1.1, 1.1, 2);
+        TimestampTransactions transaction2 = new TimestampTransactions(currentTimeMillis() - TEN_SECONDS, 13.2, 13.2, 13.2, 2);
+        TimestampTransactions transaction3 = new TimestampTransactions(currentTimeMillis() - THIRTY_SECONDS, 13.1, 13.1, 13.1, 2);
 
         TransactionStatistics transactionStatistics = new TransactionStatistics();
-        transactionStatistics.updateStatistics(createTransactions(asList(olderTransaction, transaction, transaction2, transaction3)));
+        transactionStatistics.update(createTransactions(asList(olderTransaction, transaction, transaction2, transaction3)));
 
         assertThat(transactionStatistics.getCount(), is(6l));
         assertThat(transactionStatistics.getSum(), is(27.4));
-        assertThat(transactionStatistics.getAvg(), is(4.566666666666666));
+        assertThat(transactionStatistics.getAvg(), is(4.57));
         assertThat(transactionStatistics.getMax(), is(13.2));
         assertThat(transactionStatistics.getMin(), is(1.1));
     }
 
-    private Map<Long, Transaction> createTransactions(List<Transaction> transactionsToAdd) {
-        return transactionsToAdd.stream().collect(toMap(Transaction::getTimestamp, transaction -> transaction));
+    @Test
+    public void shouldReturnTransactionStatisticsFormatted() {
+        TransactionStatistics transactionStatistics = new TransactionStatistics();
+
+        TransactionStatistics transactionStatisticsFormatted = transactionStatistics.formatted();
+
+        assertThat(transactionStatisticsFormatted.getMax(), is(0.0));
+        assertThat(transactionStatisticsFormatted.getMin(), is(0.0));
+    }
+
+    private Map<Long, TimestampTransactions> createTransactions(List<TimestampTransactions> transactionsToAdd) {
+        return transactionsToAdd.stream().collect(toMap(TimestampTransactions::getTimestamp, timestampTransactions -> timestampTransactions));
     }
 }

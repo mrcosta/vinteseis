@@ -36,6 +36,8 @@ public class TransactionsTest {
 
         assertThat(transactions.getTransactions().size(), is(1));
         assertThat(transactions.getTransactions().get(timestamp).getAmount(), is(32.3));
+        assertThat(transactions.getTransactions().get(timestamp).getMax(), is(20.0));
+        assertThat(transactions.getTransactions().get(timestamp).getMin(), is(12.3));
         assertThat(count, is(2l));
     }
 }

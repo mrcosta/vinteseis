@@ -5,3 +5,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/mrcosta/vinteseis/badge.svg?branch=master)](https://coveralls.io/github/mrcosta/vinteseis?branch=master)
 
 * validations: validating if the timestamp is in the future or older than 60 seconds
+
+# improvements
+* logging
+* creation of a Dto for TransactionStatistics
+* containerization (docker)
