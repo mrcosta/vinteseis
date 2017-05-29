@@ -17,7 +17,7 @@ A better visualization of a transaction's structure:
 ```
 
 And another endpoint to retrieve the information related to the transactions of the last 60 seconds. 
-Request example: 
+Request example:
 
 ```bash
 $ curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET 'http://localhost:8080/statistics'

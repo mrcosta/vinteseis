@@ -39,7 +39,7 @@ public class StatisticsControllerIntegrationTest {
     }
 
     @Test
-    public void shouldMergeValidTransactionsAndReturnCorrectStatistics() throws Exception {
+    public void shouldMergeValidTransactionsAndReturnCorrectStatisticsEvenWithParallelRequests() throws Exception {
         String statistics = "{\"sum\":132.1,\"avg\":44.03,\"max\":50.7,\"min\":30.7,\"count\":3}";
         long timestamp = currentTimeMillis();
 
@@ -48,14 +48,31 @@ public class StatisticsControllerIntegrationTest {
         String otherTransaction = "{\"amount\": 50.7,\"timestamp\": " + timestamp + "}";
 
         mvc.perform(post("/transactions").content(previousTransaction).contentType(APPLICATION_JSON));
-        Thread.sleep(100);
-        mvc.perform(post("/transactions").content(transaction).contentType(APPLICATION_JSON));
-        Thread.sleep(100);
-        mvc.perform(post("/transactions").content(otherTransaction).contentType(APPLICATION_JSON));
-        Thread.sleep(100);
+        sendParallelRequests(transaction, otherTransaction);
 
         mvc.perform(get("/statistics").accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo(statistics)));
+    }
+
+    private void sendParallelRequests(String transaction, String otherTransaction) throws Exception {
+        Runnable taskTransaction = () -> {
+            try {
+                mvc.perform(post("/transactions").content(transaction).contentType(APPLICATION_JSON));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+
+        Runnable taskOtherTransaction = () -> {
+            try {
+                mvc.perform(post("/transactions").content(otherTransaction).contentType(APPLICATION_JSON));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+
+        new Thread(taskTransaction).start();
+        new Thread(taskOtherTransaction).start();
     }
 }

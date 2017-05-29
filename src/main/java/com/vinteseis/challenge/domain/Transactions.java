@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Component
 @Getter
@@ -16,15 +16,15 @@ public class Transactions {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public static final int EACH_100_MILLISECONDS = 100;
+    public static final int EACH_10_MILLISECONDS = 10;
 
     @Autowired
     private TransactionStatistics transactionStatistics;
 
-    private Map<Long, TimestampTransactions> transactions;
+    private ConcurrentMap<Long, TimestampTransactions> transactions;
 
     public Transactions() {
-       transactions = new HashMap<>();
+       transactions = new ConcurrentHashMap<>();
     }
 
     public long add(Transaction transaction) {
@@ -39,7 +39,7 @@ public class Transactions {
         return count;
     }
 
-    @Scheduled(fixedDelay = EACH_100_MILLISECONDS)
+    @Scheduled(fixedDelay = EACH_10_MILLISECONDS)
     public void updateStatistics() {
         transactionStatistics.update(transactions);
     }
