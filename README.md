@@ -64,7 +64,6 @@ basically java8 with spring-boot (and all resources that automagically provide),
 # improvements to be done
 * better handling for concurrency (I did a way that retrieve in not O(1) and then start this current commit with concurrency)
 * logging
-* creation of a Dto for TransactionStatistics
 * containerization (docker)
 * some small refactor (after two days working in just one thing, it's hard to see all the refactors haha. Is better to rest a little haha)
 * performance tests

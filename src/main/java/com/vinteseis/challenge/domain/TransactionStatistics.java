@@ -1,11 +1,12 @@
 package com.vinteseis.challenge.domain;
 
+import com.vinteseis.challenge.domain.dtos.TransactionStatisticsDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
-import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 import static java.lang.Double.*;
 import static java.lang.System.currentTimeMillis;
@@ -23,7 +24,7 @@ public class TransactionStatistics {
     private double min = MAX_VALUE;
     private long count;
 
-    public void update(Map<Long, TimestampTransactions> transactions) {
+    public void update(ConcurrentMap<Long, TimestampTransactions> transactions) {
         long oneMinuteBefore = currentTimeMillis() - A_MINUTE;
         restartValues();
 
@@ -34,11 +35,14 @@ public class TransactionStatistics {
         });
     }
 
-    public TransactionStatistics formatted() {
-        max = max == MIN_VALUE ? 0 : max;
-        min = min == MAX_VALUE ? 0 : min;
+    public TransactionStatisticsDto toDto() {
+        double updatedSum = sum;
+        double updatedAvg = avg;
+        long updatedCount = count;
+        double updatedMax = max == MIN_VALUE ? 0 : max;
+        double updatedMin = min == MAX_VALUE ? 0 : min;
 
-        return this;
+        return new TransactionStatisticsDto(updatedSum, updatedAvg, updatedMax, updatedMin, updatedCount);
     }
 
     private void updateValues(TimestampTransactions timestampTransactions) {

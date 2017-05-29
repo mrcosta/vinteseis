@@ -27,7 +27,7 @@ public class Transactions {
        transactions = new ConcurrentHashMap<>();
     }
 
-    public long add(Transaction transaction) {
+    public synchronized long add(Transaction transaction) {
         long count;
 
         if (timestampAlreadyAdded(transaction.getTimestamp())) {

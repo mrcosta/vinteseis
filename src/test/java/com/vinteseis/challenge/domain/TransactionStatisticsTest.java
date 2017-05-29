@@ -1,13 +1,14 @@
 package com.vinteseis.challenge.domain;
 
+import com.vinteseis.challenge.domain.dtos.TransactionStatisticsDto;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toConcurrentMap;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -47,16 +48,16 @@ public class TransactionStatisticsTest {
     }
 
     @Test
-    public void shouldReturnTransactionStatisticsFormatted() {
+    public void shouldReturnTransactionStatisticsDtoWithFormattedInformation() {
         TransactionStatistics transactionStatistics = new TransactionStatistics();
 
-        TransactionStatistics transactionStatisticsFormatted = transactionStatistics.formatted();
+        TransactionStatisticsDto transactionStatisticsFormatted = transactionStatistics.toDto();
 
         assertThat(transactionStatisticsFormatted.getMax(), is(0.0));
         assertThat(transactionStatisticsFormatted.getMin(), is(0.0));
     }
 
-    private Map<Long, TimestampTransactions> createTransactions(List<TimestampTransactions> transactionsToAdd) {
-        return transactionsToAdd.stream().collect(toMap(TimestampTransactions::getTimestamp, timestampTransactions -> timestampTransactions));
+    private ConcurrentMap<Long, TimestampTransactions> createTransactions(List<TimestampTransactions> transactionsToAdd) {
+        return transactionsToAdd.stream().collect(toConcurrentMap(TimestampTransactions::getTimestamp, timestampTransactions -> timestampTransactions));
     }
 }

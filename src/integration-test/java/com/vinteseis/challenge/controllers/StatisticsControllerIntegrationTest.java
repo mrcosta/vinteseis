@@ -29,7 +29,6 @@ public class StatisticsControllerIntegrationTest {
     private MockMvc mvc;
 
     @Test
-    @Ignore
     public void shouldReturnTransactionStatisticsEvenWithoutAnySentTransactions() throws Exception {
         String statistics = "{\"sum\":0.0,\"avg\":0.0,\"max\":0.0,\"min\":0.0,\"count\":0}";
 
@@ -50,6 +49,7 @@ public class StatisticsControllerIntegrationTest {
         mvc.perform(post("/transactions").content(previousTransaction).contentType(APPLICATION_JSON));
         sendParallelRequests(transaction, otherTransaction);
 
+        Thread.sleep(100);
         mvc.perform(get("/statistics").accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo(statistics)));
