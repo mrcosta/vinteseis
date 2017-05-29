@@ -13,5 +13,5 @@ public class GlobalHandlerException {
 
     @ExceptionHandler(value =  { MethodArgumentNotValidException.class, HttpMessageNotReadableException.class} )
     @ResponseStatus(value = NO_CONTENT)
-    protected void handleValidationException() {}
+    protected void handleValidationException() {/* left empty on purpose, is how ControllerAdvice works */}
 }
